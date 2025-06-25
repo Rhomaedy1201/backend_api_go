@@ -83,3 +83,35 @@ func FindPostById(c *gin.Context) {
 		"data":    post,
 	})
 }
+
+// update posts
+func UpdatePost(c *gin.Context) {
+	var post models.Post
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	//validete input
+	var input ValidatePostInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		var ve validator.ValidationErrors
+		if errors.As(err, &ve) {
+			out := make([]ErrorMsg, len(ve))
+			for i, fe := range ve {
+				out[i] = ErrorMsg{fe.Field(), GetErrorMsg(fe)}
+			}
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": out})
+		}
+		return
+	}
+
+	//update post
+	models.DB.Model(&post).Updates(input)
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "Posts updated successfully",
+		"data":    post,
+	})
+}

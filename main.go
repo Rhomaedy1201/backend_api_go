@@ -25,6 +25,9 @@ func main() {
 	router.POST("/api/posts", controllers.StorePost)
 	//create route detail posts
 	router.GET("/api/posts/:id", controllers.FindPostById)
+	//crate route update posts
+	router.PUT("/api/posts/:id", controllers.UpdatePost)
 
+	//start server with port 3000
 	router.Run(":3000")
 }
