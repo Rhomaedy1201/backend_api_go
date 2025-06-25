@@ -115,3 +115,20 @@ func UpdatePost(c *gin.Context) {
 		"data":    post,
 	})
 }
+
+func DeletePosts(c *gin.Context) {
+	var post models.Post
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	//delete posts
+	models.DB.Delete(&post)
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "Posts deleted successfully",
+	})
+}
