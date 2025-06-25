@@ -23,6 +23,8 @@ func main() {
 	router.GET("/api/posts", controllers.FindPosts)
 	//create route store posts
 	router.POST("/api/posts", controllers.StorePost)
+	//create route detail posts
+	router.GET("/api/posts/:id", controllers.FindPostById)
 
 	router.Run(":3000")
 }
